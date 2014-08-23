@@ -32,6 +32,10 @@ CDirectXFramework::CDirectXFramework(void)
 	mYPosition		= 0.0f;
 	mZPosition		= 0.0f;
 
+	mCameraXPos		= 0.0f;
+	mCameraYPos		= 5.0f;
+	mCameraZPos		= -10.0f;
+
 }
 
 CDirectXFramework::~CDirectXFramework(void)
@@ -116,7 +120,7 @@ void CDirectXFramework::Init(HWND& hWnd, HINSTANCE& hInst, bool bWindowed)
 	// View and Projection Matrices
 
 	// Initialize View Matrix
-	m_eyePos	= D3DXVECTOR3(0.0f, 5.0f, -10.0f);	// Camera position
+	m_eyePos	= D3DXVECTOR3(mCameraXPos, mCameraYPos, mCameraZPos);	// Camera position
 	m_lookAt	= D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// Pos. camera is viewing
 	m_upVec		= D3DXVECTOR3(0.0f, 1.0f, 0.0f);	// Rotational orientation 
 	
@@ -136,7 +140,7 @@ void CDirectXFramework::Init(HWND& hWnd, HINSTANCE& hInst, bool bWindowed)
 		D3DXToRadian(65.0f),			// Field of View
 		(float)width / (float)height,	// Aspect Ratio
 		1.0f,							// Near Plane
-		2000.0f);						// Far Plane
+		200.0f);						// Far Plane
 
 	// Apply the projection matrix in the scene
 	m_pD3DDevice->SetTransform(D3DTS_PROJECTION, &m_projMat);
@@ -159,111 +163,112 @@ void CDirectXFramework::Init(HWND& hWnd, HINSTANCE& hInst, bool bWindowed)
 	// Load vertex info
 
 	// Front
-	m_cubeVerts[0].position = D3DXVECTOR3(-1.0f, -1.0f, -1.0f);
-	m_cubeVerts[1].position = D3DXVECTOR3(-1.0f, 1.0f, -1.0f);
-	m_cubeVerts[2].position = D3DXVECTOR3(1.0f, 1.0f, -1.0f);
-	m_cubeVerts[3].position = D3DXVECTOR3(1.0f, -1.0f, -1.0f);
-	D3DXVec3Normalize(&m_cubeVerts[0].normal, &D3DXVECTOR3(0.0f, 0.0f, -1.0f));
-	D3DXVec3Normalize(&m_cubeVerts[1].normal, &D3DXVECTOR3(0.0f, 0.0f, -1.0f));
-	D3DXVec3Normalize(&m_cubeVerts[2].normal, &D3DXVECTOR3(0.0f, 0.0f, -1.0f));
-	D3DXVec3Normalize(&m_cubeVerts[3].normal, &D3DXVECTOR3(0.0f, 0.0f, -1.0f));
-	m_cubeVerts[0].uv = D3DXVECTOR2(0.0f, 1.0f);
-	m_cubeVerts[1].uv = D3DXVECTOR2(0.0f, 0.0f);
-	m_cubeVerts[2].uv = D3DXVECTOR2(1.0f, 0.0f);
-	m_cubeVerts[3].uv = D3DXVECTOR2(1.0f, 1.0f);
+	//m_cubeVerts[0].position = D3DXVECTOR3(-1.0f, -1.0f, -1.0f);
+	//m_cubeVerts[1].position = D3DXVECTOR3(-1.0f, 1.0f, -1.0f);
+	//m_cubeVerts[2].position = D3DXVECTOR3(1.0f, 1.0f, -1.0f);
+	//m_cubeVerts[3].position = D3DXVECTOR3(1.0f, -1.0f, -1.0f);
+	//D3DXVec3Normalize(&m_cubeVerts[0].normal, &D3DXVECTOR3(0.0f, 0.0f, -1.0f));
+	//D3DXVec3Normalize(&m_cubeVerts[1].normal, &D3DXVECTOR3(0.0f, 0.0f, -1.0f));
+	//D3DXVec3Normalize(&m_cubeVerts[2].normal, &D3DXVECTOR3(0.0f, 0.0f, -1.0f));
+	//D3DXVec3Normalize(&m_cubeVerts[3].normal, &D3DXVECTOR3(0.0f, 0.0f, -1.0f));
+	//m_cubeVerts[0].uv = D3DXVECTOR2(0.0f, 1.0f);
+	//m_cubeVerts[1].uv = D3DXVECTOR2(0.0f, 0.0f);
+	//m_cubeVerts[2].uv = D3DXVECTOR2(1.0f, 0.0f);
+	//m_cubeVerts[3].uv = D3DXVECTOR2(1.0f, 1.0f);
 
-	// Back
-	m_cubeVerts[4].position = D3DXVECTOR3(-1.0f, -1.0f, 1.0f);
-	m_cubeVerts[5].position = D3DXVECTOR3(1.0f, -1.0f, 1.0f);
-	m_cubeVerts[6].position = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-	m_cubeVerts[7].position = D3DXVECTOR3(-1.0f, 1.0f, 1.0f);
-	D3DXVec3Normalize(&m_cubeVerts[4].normal, &D3DXVECTOR3(0.0f, 0.0f, 1.0f));
-	D3DXVec3Normalize(&m_cubeVerts[5].normal, &D3DXVECTOR3(0.0f, 0.0f, 1.0f));
-	D3DXVec3Normalize(&m_cubeVerts[6].normal, &D3DXVECTOR3(0.0f, 0.0f, 1.0f));
-	D3DXVec3Normalize(&m_cubeVerts[7].normal, &D3DXVECTOR3(0.0f, 0.0f, 1.0f));
-	m_cubeVerts[4].uv = D3DXVECTOR2(1.0f, 1.0f);
-	m_cubeVerts[5].uv = D3DXVECTOR2(0.0f, 1.0f);
-	m_cubeVerts[6].uv = D3DXVECTOR2(0.0f, 0.0f);
-	m_cubeVerts[7].uv = D3DXVECTOR2(1.0f, 0.0f);
+	//// Back
+	//m_cubeVerts[4].position = D3DXVECTOR3(-1.0f, -1.0f, 1.0f);
+	//m_cubeVerts[5].position = D3DXVECTOR3(1.0f, -1.0f, 1.0f);
+	//m_cubeVerts[6].position = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	//m_cubeVerts[7].position = D3DXVECTOR3(-1.0f, 1.0f, 1.0f);
+	//D3DXVec3Normalize(&m_cubeVerts[4].normal, &D3DXVECTOR3(0.0f, 0.0f, 1.0f));
+	//D3DXVec3Normalize(&m_cubeVerts[5].normal, &D3DXVECTOR3(0.0f, 0.0f, 1.0f));
+	//D3DXVec3Normalize(&m_cubeVerts[6].normal, &D3DXVECTOR3(0.0f, 0.0f, 1.0f));
+	//D3DXVec3Normalize(&m_cubeVerts[7].normal, &D3DXVECTOR3(0.0f, 0.0f, 1.0f));
+	//m_cubeVerts[4].uv = D3DXVECTOR2(1.0f, 1.0f);
+	//m_cubeVerts[5].uv = D3DXVECTOR2(0.0f, 1.0f);
+	//m_cubeVerts[6].uv = D3DXVECTOR2(0.0f, 0.0f);
+	//m_cubeVerts[7].uv = D3DXVECTOR2(1.0f, 0.0f);
 
-	// Top
-	m_cubeVerts[8].position = D3DXVECTOR3(-1.0f, 1.0f, -1.0f);
-	m_cubeVerts[9].position = D3DXVECTOR3(-1.0f, 1.0f, 1.0f);
-	m_cubeVerts[10].position = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-	m_cubeVerts[11].position = D3DXVECTOR3(1.0f, 1.0f, -1.0f);
-	D3DXVec3Normalize(&m_cubeVerts[8].normal, &D3DXVECTOR3(0.0f, 1.0f, 0.0f));
-	D3DXVec3Normalize(&m_cubeVerts[9].normal, &D3DXVECTOR3(0.0f, 1.0f, 0.0f));
-	D3DXVec3Normalize(&m_cubeVerts[10].normal, &D3DXVECTOR3(0.0f, 1.0f, 0.0f));
-	D3DXVec3Normalize(&m_cubeVerts[11].normal, &D3DXVECTOR3(0.0f, 1.0f, 0.0f));
-	m_cubeVerts[8].uv = D3DXVECTOR2(0.0f, 1.0f);
-	m_cubeVerts[9].uv = D3DXVECTOR2(0.0f, 0.0f);
-	m_cubeVerts[10].uv = D3DXVECTOR2(1.0f, 0.0f);
-	m_cubeVerts[11].uv = D3DXVECTOR2(1.0f, 1.0f);
+	//// Top
+	//m_cubeVerts[8].position = D3DXVECTOR3(-1.0f, 1.0f, -1.0f);
+	//m_cubeVerts[9].position = D3DXVECTOR3(-1.0f, 1.0f, 1.0f);
+	//m_cubeVerts[10].position = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	//m_cubeVerts[11].position = D3DXVECTOR3(1.0f, 1.0f, -1.0f);
+	//D3DXVec3Normalize(&m_cubeVerts[8].normal, &D3DXVECTOR3(0.0f, 1.0f, 0.0f));
+	//D3DXVec3Normalize(&m_cubeVerts[9].normal, &D3DXVECTOR3(0.0f, 1.0f, 0.0f));
+	//D3DXVec3Normalize(&m_cubeVerts[10].normal, &D3DXVECTOR3(0.0f, 1.0f, 0.0f));
+	//D3DXVec3Normalize(&m_cubeVerts[11].normal, &D3DXVECTOR3(0.0f, 1.0f, 0.0f));
+	//m_cubeVerts[8].uv = D3DXVECTOR2(0.0f, 1.0f);
+	//m_cubeVerts[9].uv = D3DXVECTOR2(0.0f, 0.0f);
+	//m_cubeVerts[10].uv = D3DXVECTOR2(1.0f, 0.0f);
+	//m_cubeVerts[11].uv = D3DXVECTOR2(1.0f, 1.0f);
 
-	// Bottom
-	m_cubeVerts[12].position = D3DXVECTOR3(-1.0f, -1.0f, -1.0f);
-	m_cubeVerts[13].position = D3DXVECTOR3(1.0f, -1.0f, -1.0f);
-	m_cubeVerts[14].position = D3DXVECTOR3(1.0f, -1.0f, 1.0f);
-	m_cubeVerts[15].position = D3DXVECTOR3(-1.0f, -1.0f, 1.0f);
-	D3DXVec3Normalize(&m_cubeVerts[12].normal, &D3DXVECTOR3(0.0f, -1.0f, 0.0f));
-	D3DXVec3Normalize(&m_cubeVerts[13].normal, &D3DXVECTOR3(0.0f, -1.0f, 0.0f));
-	D3DXVec3Normalize(&m_cubeVerts[14].normal, &D3DXVECTOR3(0.0f, -1.0f, 0.0f));
-	D3DXVec3Normalize(&m_cubeVerts[15].normal, &D3DXVECTOR3(0.0f, -1.0f, 0.0f));
-	m_cubeVerts[12].uv = D3DXVECTOR2(1.0f, 1.0f);
-	m_cubeVerts[13].uv = D3DXVECTOR2(0.0f, 1.0f);
-	m_cubeVerts[14].uv = D3DXVECTOR2(0.0f, 0.0f);
-	m_cubeVerts[15].uv = D3DXVECTOR2(1.0f, 0.0f);
+	//// Bottom
+	//m_cubeVerts[12].position = D3DXVECTOR3(-1.0f, -1.0f, -1.0f);
+	//m_cubeVerts[13].position = D3DXVECTOR3(1.0f, -1.0f, -1.0f);
+	//m_cubeVerts[14].position = D3DXVECTOR3(1.0f, -1.0f, 1.0f);
+	//m_cubeVerts[15].position = D3DXVECTOR3(-1.0f, -1.0f, 1.0f);
+	//D3DXVec3Normalize(&m_cubeVerts[12].normal, &D3DXVECTOR3(0.0f, -1.0f, 0.0f));
+	//D3DXVec3Normalize(&m_cubeVerts[13].normal, &D3DXVECTOR3(0.0f, -1.0f, 0.0f));
+	//D3DXVec3Normalize(&m_cubeVerts[14].normal, &D3DXVECTOR3(0.0f, -1.0f, 0.0f));
+	//D3DXVec3Normalize(&m_cubeVerts[15].normal, &D3DXVECTOR3(0.0f, -1.0f, 0.0f));
+	//m_cubeVerts[12].uv = D3DXVECTOR2(1.0f, 1.0f);
+	//m_cubeVerts[13].uv = D3DXVECTOR2(0.0f, 1.0f);
+	//m_cubeVerts[14].uv = D3DXVECTOR2(0.0f, 0.0f);
+	//m_cubeVerts[15].uv = D3DXVECTOR2(1.0f, 0.0f);
 
-	// Left
-	m_cubeVerts[16].position = D3DXVECTOR3(-1.0f, -1.0f, 1.0f);
-	m_cubeVerts[17].position = D3DXVECTOR3(-1.0f, 1.0f, 1.0f);
-	m_cubeVerts[18].position = D3DXVECTOR3(-1.0f, 1.0f, -1.0f);
-	m_cubeVerts[19].position = D3DXVECTOR3(-1.0f, -1.0f, -1.0f);
-	D3DXVec3Normalize(&m_cubeVerts[16].normal, &D3DXVECTOR3(-1.0f, 0.0f, 0.0f));
-	D3DXVec3Normalize(&m_cubeVerts[17].normal, &D3DXVECTOR3(-1.0f, 0.0f, 0.0f));
-	D3DXVec3Normalize(&m_cubeVerts[18].normal, &D3DXVECTOR3(-1.0f, 0.0f, 0.0f));
-	D3DXVec3Normalize(&m_cubeVerts[19].normal, &D3DXVECTOR3(-1.0f, 0.0f, 0.0f));
-	m_cubeVerts[16].uv = D3DXVECTOR2(0.0f, 1.0f);
-	m_cubeVerts[17].uv = D3DXVECTOR2(0.0f, 0.0f);
-	m_cubeVerts[18].uv = D3DXVECTOR2(1.0f, 0.0f);
-	m_cubeVerts[19].uv = D3DXVECTOR2(1.0f, 1.0f);
+	//// Left
+	//m_cubeVerts[16].position = D3DXVECTOR3(-1.0f, -1.0f, 1.0f);
+	//m_cubeVerts[17].position = D3DXVECTOR3(-1.0f, 1.0f, 1.0f);
+	//m_cubeVerts[18].position = D3DXVECTOR3(-1.0f, 1.0f, -1.0f);
+	//m_cubeVerts[19].position = D3DXVECTOR3(-1.0f, -1.0f, -1.0f);
+	//D3DXVec3Normalize(&m_cubeVerts[16].normal, &D3DXVECTOR3(-1.0f, 0.0f, 0.0f));
+	//D3DXVec3Normalize(&m_cubeVerts[17].normal, &D3DXVECTOR3(-1.0f, 0.0f, 0.0f));
+	//D3DXVec3Normalize(&m_cubeVerts[18].normal, &D3DXVECTOR3(-1.0f, 0.0f, 0.0f));
+	//D3DXVec3Normalize(&m_cubeVerts[19].normal, &D3DXVECTOR3(-1.0f, 0.0f, 0.0f));
+	//m_cubeVerts[16].uv = D3DXVECTOR2(0.0f, 1.0f);
+	//m_cubeVerts[17].uv = D3DXVECTOR2(0.0f, 0.0f);
+	//m_cubeVerts[18].uv = D3DXVECTOR2(1.0f, 0.0f);
+	//m_cubeVerts[19].uv = D3DXVECTOR2(1.0f, 1.0f);
 
-	// Right
-	m_cubeVerts[20].position = D3DXVECTOR3(1.0f, -1.0f, -1.0f);
-	m_cubeVerts[21].position = D3DXVECTOR3(1.0f, 1.0f, -1.0f);
-	m_cubeVerts[22].position = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-	m_cubeVerts[23].position = D3DXVECTOR3(1.0f, -1.0f, 1.0f);
-	D3DXVec3Normalize(&m_cubeVerts[20].normal, &D3DXVECTOR3(1.0f, 0.0f, 0.0f));
-	D3DXVec3Normalize(&m_cubeVerts[21].normal, &D3DXVECTOR3(1.0f, 0.0f, 0.0f));
-	D3DXVec3Normalize(&m_cubeVerts[22].normal, &D3DXVECTOR3(1.0f, 0.0f, 0.0f));
-	D3DXVec3Normalize(&m_cubeVerts[23].normal, &D3DXVECTOR3(1.0f, 0.0f, 0.0f));
-	m_cubeVerts[20].uv = D3DXVECTOR2(0.0f, 1.0f);
-	m_cubeVerts[21].uv = D3DXVECTOR2(0.0f, 0.0f);
-	m_cubeVerts[22].uv = D3DXVECTOR2(1.0f, 0.0f);
-	m_cubeVerts[23].uv = D3DXVECTOR2(1.0f, 1.0f);
+	//// Right
+	//m_cubeVerts[20].position = D3DXVECTOR3(1.0f, -1.0f, -1.0f);
+	//m_cubeVerts[21].position = D3DXVECTOR3(1.0f, 1.0f, -1.0f);
+	//m_cubeVerts[22].position = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	//m_cubeVerts[23].position = D3DXVECTOR3(1.0f, -1.0f, 1.0f);
+	//D3DXVec3Normalize(&m_cubeVerts[20].normal, &D3DXVECTOR3(1.0f, 0.0f, 0.0f));
+	//D3DXVec3Normalize(&m_cubeVerts[21].normal, &D3DXVECTOR3(1.0f, 0.0f, 0.0f));
+	//D3DXVec3Normalize(&m_cubeVerts[22].normal, &D3DXVECTOR3(1.0f, 0.0f, 0.0f));
+	//D3DXVec3Normalize(&m_cubeVerts[23].normal, &D3DXVECTOR3(1.0f, 0.0f, 0.0f));
+	//m_cubeVerts[20].uv = D3DXVECTOR2(0.0f, 1.0f);
+	//m_cubeVerts[21].uv = D3DXVECTOR2(0.0f, 0.0f);
+	//m_cubeVerts[22].uv = D3DXVECTOR2(1.0f, 0.0f);
+	//m_cubeVerts[23].uv = D3DXVECTOR2(1.0f, 1.0f);
 
-	// Load index info, refers into index into verts array to compose triangles
-	// Note: A clockwise winding order of verts will show the front face.
+	//// Load index info, refers into index into verts array to compose triangles
+	//// Note: A clockwise winding order of verts will show the front face.
 
-	// Front
-	m_cubeIndices[0] = 0;  m_cubeIndices[1] = 1;  m_cubeIndices[2] = 2;		// Triangle 0
-	m_cubeIndices[3] = 0;  m_cubeIndices[4] = 2;  m_cubeIndices[5] = 3;		// Triangle 1
-	// Back
-	m_cubeIndices[6] = 4;  m_cubeIndices[7] = 5;  m_cubeIndices[8] = 6;		// Triangle 2
-	m_cubeIndices[9] = 4;  m_cubeIndices[10] = 6; m_cubeIndices[11] = 7;	// Triangle 3
-	// Top
-	m_cubeIndices[12] = 8; m_cubeIndices[13] = 9; m_cubeIndices[14] = 10;	// Triangle 4
-	m_cubeIndices[15] = 8; m_cubeIndices[16] = 10; m_cubeIndices[17] = 11;	// Triangle 5
-	// Bottom
-	m_cubeIndices[18] = 12; m_cubeIndices[19] = 13; m_cubeIndices[20] = 14;	// Triangle 6
-	m_cubeIndices[21] = 12; m_cubeIndices[22] = 14; m_cubeIndices[23] = 15;	// Triangle 7
-	// Left
-	m_cubeIndices[24] = 16; m_cubeIndices[25] = 17; m_cubeIndices[26] = 18;	// Triangle 8
-	m_cubeIndices[27] = 16; m_cubeIndices[28] = 18; m_cubeIndices[29] = 19;	// Triangle 9
-	// Right
-	m_cubeIndices[30] = 20; m_cubeIndices[31] = 21; m_cubeIndices[32] = 22;	// Triangle 10
-	m_cubeIndices[33] = 20; m_cubeIndices[34] = 22; m_cubeIndices[35] = 23;	// Triangle 11
+	//// Front
+	//m_cubeIndices[0] = 0;  m_cubeIndices[1] = 1;  m_cubeIndices[2] = 2;		// Triangle 0
+	//m_cubeIndices[3] = 0;  m_cubeIndices[4] = 2;  m_cubeIndices[5] = 3;		// Triangle 1
+	//// Back
+	//m_cubeIndices[6] = 4;  m_cubeIndices[7] = 5;  m_cubeIndices[8] = 6;		// Triangle 2
+	//m_cubeIndices[9] = 4;  m_cubeIndices[10] = 6; m_cubeIndices[11] = 7;	// Triangle 3
+	//// Top
+	//m_cubeIndices[12] = 8; m_cubeIndices[13] = 9; m_cubeIndices[14] = 10;	// Triangle 4
+	//m_cubeIndices[15] = 8; m_cubeIndices[16] = 10; m_cubeIndices[17] = 11;	// Triangle 5
+	//// Bottom
+	//m_cubeIndices[18] = 12; m_cubeIndices[19] = 13; m_cubeIndices[20] = 14;	// Triangle 6
+	//m_cubeIndices[21] = 12; m_cubeIndices[22] = 14; m_cubeIndices[23] = 15;	// Triangle 7
+	//// Left
+	//m_cubeIndices[24] = 16; m_cubeIndices[25] = 17; m_cubeIndices[26] = 18;	// Triangle 8
+	//m_cubeIndices[27] = 16; m_cubeIndices[28] = 18; m_cubeIndices[29] = 19;	// Triangle 9
+	//// Right
+	//m_cubeIndices[30] = 20; m_cubeIndices[31] = 21; m_cubeIndices[32] = 22;	// Triangle 10
+	//m_cubeIndices[33] = 20; m_cubeIndices[34] = 22; m_cubeIndices[35] = 23;	// Triangle 11
 
+	xCube.Init();
 
 	// Create Vertex Buffer
 	m_pD3DDevice->CreateVertexBuffer(
@@ -294,7 +299,7 @@ void CDirectXFramework::Init(HWND& hWnd, HINSTANCE& hInst, bool bWindowed)
 		0);			// Flags
 	
 	// Modify data
-	memcpy(pVerts, m_cubeVerts, 4 * 6 * sizeof(Vertex));
+	memcpy(pVerts, xCube.getCubeVertsAddress(), 4 * 6 * sizeof(Vertex));
 
 	// Unlock vertex buffer
 	m_pD3DVertexBuffer->Unlock();
@@ -310,7 +315,7 @@ void CDirectXFramework::Init(HWND& hWnd, HINSTANCE& hInst, bool bWindowed)
 		0);			// Flags
 
 	// Modify data
-	memcpy(pIndices, m_cubeIndices, 3 * 12 * sizeof(WORD));
+	memcpy(pIndices, xCube.vetCubeIndicesAddres(), 3 * 12 * sizeof(WORD));
 
 	// Unlock index buffer
 	m_pD3DIndexBuffer->Unlock();
@@ -556,10 +561,51 @@ void CDirectXFramework::Update()
 		mZPosition = 0.0f;
 
 		mCameraXPos = 0.0f;
-		mCameraYPos = 0.0f;
-		mCameraZPos = 0.0f;
+		mCameraYPos = 5.0f;
+		mCameraZPos = -10.0f;
+
+		xCube.setPosition(0.0f, 0.0f, 0.0f);
 	}
 
+	if (mKeyboardState[DIK_Q] & 0x90)
+	{
+		mCameraZPos += 0.01f;
+	}
+
+	if (mKeyboardState[DIK_E] & 0x90)
+	{
+		mCameraZPos -= 0.01f;
+	}
+
+	if (mKeyboardState[DIK_UPARROW] & 0x90)
+	{
+		xCube.setYPos(0.01f);
+	}
+
+	if (mKeyboardState[DIK_DOWNARROW] & 0x90)
+	{
+		xCube.setYPos(-0.01f);
+	}
+
+	if (mKeyboardState[DIK_LEFTARROW] & 0x90)
+	{
+		xCube.setXPos(-0.01f);
+	}
+
+	if (mKeyboardState[DIK_RIGHTARROW] & 0x90)
+	{
+		xCube.setXPos(0.01f);
+	}
+
+	if (mKeyboardState[DIK_Z] & 0x90)
+	{
+		xCube.setZPos(0.01f);
+	}
+
+	if (mKeyboardState[DIK_X] & 0x90)
+	{
+		xCube.setZPos(-0.01f);
+	}
 }
 
 void CDirectXFramework::Render()
@@ -573,6 +619,12 @@ void CDirectXFramework::Render()
 	// render functions (Clear and Present, BeginScene and EndScene)
 	//////////////////////////////////////////////////////////////////////////
 
+	/** Make a for loop instead, draw through all objects passed into this function. */
+	/**
+	* What I should consider doing here is now making Render() take an argument of maybe a Vector that will pass over to me the objects I need to draw.
+	* Start a for loop that will iterate through the elements in the array, and hopefully I can independently call the necessary functions needed to draw each object.
+	*/
+	
 	// Clear the back buffer, call BeginScene()
 	if(SUCCEEDED(m_pD3DDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DXCOLOR(0.0f, 0.4f, 0.8f, 1.0f), 1.0f, 0)))
 	{
@@ -603,8 +655,8 @@ void CDirectXFramework::Render()
 			//////////////////////////////////////////////////////////////////////////
 			// Calculate Matrix Transform
 			D3DXMatrixScaling(&scaleMat, 1.0f, 1.0f, 1.0f);			// Scaling
-			D3DXMatrixRotationYawPitchRoll(&rotMat,m_fRotation, 0.0f, 0.0f); // Rotation on Yaw, Pitch, and Roll
-			D3DXMatrixTranslation(&transMat, mXPosition, mYPosition, mZPosition);		// Translation
+			D3DXMatrixRotationYawPitchRoll(&rotMat,xCube.getXRot(), xCube.getYRot(), xCube.getZRot()); // Rotation on Yaw, Pitch, and Roll
+			D3DXMatrixTranslation(&transMat, xCube.getXPos(), xCube.getYPos(), xCube.getZPos());		// Translation
 			D3DXMatrixMultiply(&scaleMat, &scaleMat, &rotMat);		// Multiply scale and rotation, store in scale
 			D3DXMatrixMultiply(&worldMat, &scaleMat, &transMat);	// Multiply scale and translation, store in world
 			
@@ -621,6 +673,7 @@ void CDirectXFramework::Render()
 			//////////////////////////////////////////////////////////////////////////
 			// Camera update
 			//////////////////////////////////////////////////////////////////////////
+			m_eyePos = D3DXVECTOR3(mCameraXPos, mCameraYPos, mCameraZPos);
 
 			D3DXMatrixLookAtLH(
 			&m_viewMat,	// Returned viewMat
@@ -649,7 +702,7 @@ void CDirectXFramework::Render()
 			
 			// Draw FPS
 			wchar_t buffer[64];
-			swprintf_s(buffer, 64, L"FPS: %d \nX: %f \nY: %f \nZ: %f ", m_FPS, mXPosition, mYPosition, mZPosition);
+			swprintf_s(buffer, 64, L"FPS: %d \nxCube Pos\nX: %f \nY: %f \nZ: %f ", m_FPS, xCube.getXPos(), xCube.getYPos(), xCube.getZPos());
 			m_pD3DFont->DrawText(0, buffer, -1, &rect, DT_TOP | DT_NOCLIP, D3DCOLOR_ARGB(255, 255, 255, 255));
 
 			// EndScene, and Present the back buffer to the display buffer

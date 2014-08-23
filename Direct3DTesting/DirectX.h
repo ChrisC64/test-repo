@@ -31,6 +31,8 @@
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 
+#include "Cube.h"
+
 // Macro to release COM objects fast and safely
 #define SAFE_RELEASE(x) if(x){x->Release(); x = 0;}
 
@@ -123,6 +125,11 @@ class CDirectXFramework
 	float mCameraXPos;
 	float mCameraYPos;
 	float mCameraZPos;
+
+	/*********
+	* CUBE 
+	*********/
+	Cube xCube;
 
 public:
 	//////////////////////////////////////////////////////////////////////////
